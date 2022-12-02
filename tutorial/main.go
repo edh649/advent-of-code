@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/edh649/advent-of-code-2022/tutorial/mascot"
 	"rsc.io/quote"
-	"github.com/edh649/advent-of-code-2022/1/mascot"
 )
 
 func main() {

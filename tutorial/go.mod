@@ -1,4 +1,4 @@
-module github.com/edh649/advent-of-code-2022/1
+module github.com/edh649/advent-of-code-2022/tutorial
 
 go 1.19
 
