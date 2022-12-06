@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -19,7 +20,15 @@ func main() {
 		}
 	}()
 
-	fileResults := Parsefile(file)
+	fileResults := Parsefile(file, true)
+
+	//REset the pointer back to the start. Again messy
+	_, err = file.Seek(0, io.SeekStart)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fileResults2 := Parsefile(file, false)
 
 	result := ""
 	for i, v := range fileResults.finalStack {
@@ -29,7 +38,16 @@ func main() {
 		result = result + string(v[0])
 	}
 
+	result2 := ""
+	for i, v := range fileResults2.finalStack {
+		if i == 0 {
+			continue
+		}
+		result2 = result2 + string(v[0])
+	}
+
 	fmt.Println("Final order: " + result)
+	fmt.Println("Final order pt2: " + result2)
 }
 
 func GetPath() string {
@@ -50,15 +68,20 @@ func OpenFile(filepath string) *os.File { //https://stackoverflow.com/questions/
 }
 
 type fileResult struct {
-	finalStack [10][]rune
+	finalStack [][]rune
 }
 
-func Parsefile(file *os.File) fileResult { //asterisk means passed by pointer!
+func Parsefile(file *os.File, reversePickup bool) fileResult { //asterisk means passed by pointer!
 	scanner := bufio.NewScanner(file)
 
 	inSetup := true
 
-	var stacks [10][]rune //actually 9, but leave 0 as a dummy index (makes life easier later)
+	stacks := make([][]rune, 10) //create slice of slice size 10
+	for i := 0; i < 10; i++ {
+		// looping through the slice to declare
+		// slice of slice of length 3
+		stacks[i] = make([]rune, 0, 100)
+	}
 
 	for scanner.Scan() { // internally, it advances token based on sperator (new line by default)
 		strVar := scanner.Text() //get this line of text
@@ -83,9 +106,12 @@ func Parsefile(file *os.File) fileResult { //asterisk means passed by pointer!
 			stack1, _ := strconv.Atoi(strSplit[3])
 			stack2, _ := strconv.Atoi(strSplit[5])
 
-			taken := stacks[stack1][0:count]
+			var taken = make([]rune, count)
+			copy(taken, stacks[stack1][:count])
 			stacks[stack1] = stacks[stack1][count:]
-			reverse(taken)
+			if reversePickup {
+				reverse(taken)
+			}
 			toMake := append(taken, stacks[stack2]...) //the ... explodes it or something?
 			stacks[stack2] = toMake
 		}
@@ -114,5 +140,11 @@ func SetupStackRow(row string) []rune {
 func reverse[S ~[]E, E any](s S) {
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
 		s[i], s[j] = s[j], s[i]
+	}
+}
+
+func assignStack(stack []rune, itemsToFill []rune) {
+	for i, v := range itemsToFill {
+		stack[i] = v
 	}
 }
