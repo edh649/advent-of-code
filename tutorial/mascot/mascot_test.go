@@ -3,7 +3,7 @@ package mascot_test
 import (
 	"testing"
 
-	"github.com/edh649/advent-of-code-2022/tutorial/mascot"
+	"github.com/edh649/advent-of-code/tutorial/mascot"
 )
 
 func TestMascot(t *testing.T) {
