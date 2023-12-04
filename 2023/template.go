@@ -15,5 +15,7 @@ func main() {
 
 	for lineAvailable {
 		line := scanner.Text()
+
+		lineAvailable = scanner.Scan()
 	}
 }
