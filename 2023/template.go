@@ -18,4 +18,5 @@ func main() {
 
 		lineAvailable = scanner.Scan()
 	}
+	file.Close()
 }
