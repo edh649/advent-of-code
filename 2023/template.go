@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	file, _ := os.Open("input.txt")
+	file, _ := os.Open("test.txt")
 	scanner := bufio.NewScanner(file)
 
 	lineAvailable := scanner.Scan()
