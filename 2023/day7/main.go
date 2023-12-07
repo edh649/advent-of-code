@@ -27,19 +27,32 @@ func main() {
 	}
 	file.Close()
 
+	//pt1
 	sort.Slice(hands, func(i int, j int) bool {
 		return evaluateHands(hands[i], hands[j]) > 0
 	})
 
 	score := 0
-
 	for i, hand := range hands {
 		rank := i + 1
 		handScore := rank * hand.bid
 		score += handScore
 		fmt.Println("Hand " + hand.text + " bid " + fmt.Sprint(hand.bid) + " rank " + fmt.Sprint(rank) + " score " + fmt.Sprint(handScore))
 	}
+	fmt.Println("score: " + strconv.Itoa(score))
 
+	//pt2
+	sort.Slice(hands, func(i int, j int) bool {
+		return evaluateHands(hands[i], hands[j], true) > 0
+	})
+
+	score = 0
+	for i, hand := range hands {
+		rank := i + 1
+		handScore := rank * hand.bid
+		score += handScore
+		fmt.Println("Hand " + hand.text + " bid " + fmt.Sprint(hand.bid) + " rank " + fmt.Sprint(rank) + " score " + fmt.Sprint(handScore))
+	}
 	fmt.Println("score: " + strconv.Itoa(score))
 
 }

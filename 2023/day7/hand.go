@@ -50,8 +50,14 @@ func newHand(text string, bid string) Hand {
 // comparisonResult is -1 for a better, 0 for equal, 1 for b better
 type comparisonResult int
 
-func evaluateHands(a Hand, b Hand) comparisonResult {
-	scoreComp := a.handTypeScore() - b.handTypeScore()
+func evaluateHands(a Hand, b Hand, jWilds ...bool) comparisonResult {
+	//default value for jWild
+	jWild := false
+	if len(jWilds) > 0 {
+		jWild = jWilds[0]
+	}
+
+	scoreComp := a.handTypeScore(jWild) - b.handTypeScore(jWild)
 	if scoreComp > 0 { //a is higher
 		return -1
 	}
@@ -60,6 +66,15 @@ func evaluateHands(a Hand, b Hand) comparisonResult {
 	}
 	for i := 0; i < 5; i++ {
 		if a.cards[i] != b.cards[i] {
+			if jWild {
+				//If a is a J (11), then it loses.
+				if a.cards[i] == 11 {
+					return 1
+				}
+				if b.cards[i] == 11 {
+					return -1
+				}
+			}
 			if a.cards[i] > b.cards[i] {
 				return -1
 			}
@@ -69,19 +84,64 @@ func evaluateHands(a Hand, b Hand) comparisonResult {
 	return 0
 }
 
-type score struct {
-	typeStrength int
-	highestCard  int
+func (h Hand) handTypeScore(jWild bool) int {
+	baseScore := scoreHand(h.cards)
+	if !jWild {
+		return baseScore
+	}
+
+	jWildMatrix := map[int]map[int]int{
+		0: {},
+		1: {
+			1: 2, // ABCDJ = 1 		= 1 -> p	= 2
+			2: 4, // ABCCJ = p 		= 2 -> 3oac = 4
+			3: 5, // AACCJ = 2p 	= 3 -> FH 	= 5
+			4: 6, // ACCCJ = 3oac	= 4 -> 4oac	= 6
+			6: 7, // CCCCJ = 4oac	= 6 -> 5oac = 7
+		},
+		2: {
+			2: 4, // ABCJJ = p 		= 2 -> 3oac	= 4
+			3: 6, // ACCJJ = 2p 	= 3 -> 4oac	= 6
+			5: 7, // CCCJJ = FH 	= 5 -> 5oac	= 7
+		},
+		3: {
+			4: 6, // ACJJJ = 3oac	= 4 -> 4oac = 6
+			5: 7, // CCJJJ = FH 	= 5 -> 5oac = 7
+		},
+		4: {
+			6: 7, // CJJJJ = 4oac	= 6 -> 5oac = 7
+		},
+		5: {
+			7: 7, // JJJJJ = 5oac	= 7 -> 5oac = 7
+		},
+	}
+
+	numJs := 0
+	for _, v := range h.cards {
+		if v == 11 {
+			numJs++
+		}
+	}
+
+	jHandMatrix, ok := jWildMatrix[numJs]
+	if !ok {
+		panic("Not ok")
+	}
+	newScore, ok := jHandMatrix[baseScore]
+	if !ok {
+		return baseScore
+	}
+	return newScore
 }
 
-func (h Hand) handTypeScore() int {
+func scoreHand(cards []int) int {
 	cardCounts := map[int]int{}
 
 	maxCount := 0
-	for _, card := range h.cards {
+	for _, card := range cards {
 		_, ok := cardCounts[card]
 		if ok {
-			cardCounts[card] += 1
+			cardCounts[card]++
 		} else {
 			cardCounts[card] = 1
 		}
@@ -106,10 +166,10 @@ func (h Hand) handTypeScore() int {
 		if len(cardCounts) == 3 {
 			return 3 //two pair (3 cards total. pair, pair, single)
 		}
-		return 2 //one paid
+		return 2 //one pair
 	}
 	if maxCount == 1 {
 		return 1
 	}
-	return 0
+	panic("No score?!")
 }
