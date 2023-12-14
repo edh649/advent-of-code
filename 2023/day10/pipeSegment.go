@@ -15,11 +15,15 @@ const (
 
 type PipeSegment struct {
 	pipeType PipeType
+	
+	char rune
 
 	x int
 	y int
 
 	distance int
+	
+	inLoop bool
 }
 
 func NewPipeSegment(char rune, x int, y int) PipeSegment {
@@ -34,9 +38,9 @@ func NewPipeSegment(char rune, x int, y int) PipeSegment {
 	case 'J':
 		pT = NW
 	case '7':
-		pT = SE
-	case 'F':
 		pT = SW
+	case 'F':
+		pT = SE
 	case '.':
 		pT = Ground
 	case 'S':
@@ -45,7 +49,7 @@ func NewPipeSegment(char rune, x int, y int) PipeSegment {
 		panic("invalid tile character")
 	}
 
-	p := PipeSegment{pT, x, y, 0}
+	p := PipeSegment{pT, char, x, y, 0, pT == Start}
 	return p
 }
 
@@ -81,7 +85,8 @@ func (p PipeSegment) getNextCoordinate(prevX int, prevY int) (int, int) {
 	//e.g. 5 from 4, 4-5 = -1. -1 is west
 	relativeX := prevX - p.x
 	relativeY := prevY - p.y
-	return p.getNextCoordinateRelative(relativeX, relativeY)
+	diffX, diffY :=  p.getNextCoordinateRelative(relativeX, relativeY)
+	return p.x + diffX, p.y + diffY
 }
 
 func (p PipeSegment) getNextCoordinateRelative(relX int, relY int) (int, int) {
@@ -96,22 +101,28 @@ func getPipeOutput(pipeType PipeType, inX int, inY int) (int, int) {
 		if inX != 0 {
 			panic("invalid NS entry")
 		}
+		if inY == 0 {
+			panic("invalid NS entry")
+		}
 		return 0, -inY
 	case EW:
 		if inY != 0 {
 			panic("invalid EW entry")
 		}
+		if inX == 0 {
+			panic("invalid EW entry")
+		}
 		return -inX, 0
 	case NE:
-		if inX == 0 && inY == 1 {
+		if inX == 0 && inY == -1 {
 			return 1, 0
 		}
 		if inX == 1 && inY == 0 {
-			return 0, 1
+			return 0, -1
 		}
 		panic("invalid NE entry")
 	case NW:
-		if inX == 0 && inY == 1 {
+		if inX == 0 && inY == -1 {
 			return -1, 0
 		}
 		if inX == -1 && inY == 0 {
@@ -119,15 +130,15 @@ func getPipeOutput(pipeType PipeType, inX int, inY int) (int, int) {
 		}
 		panic("invalid NW entry")
 	case SE:
-		if inX == 0 && inY == -1 {
+		if inX == 0 && inY == 1 {
 			return 1, 0
 		}
 		if inX == 1 && inY == 0 {
-			return 0, -1
+			return 0, 1
 		}
 		panic("invalid SE entry")
 	case SW:
-		if inX == 0 && inY == -1 {
+		if inX == 0 && inY == 1 {
 			return -1, 0
 		}
 		if inX == -1 && inY == 0 {
