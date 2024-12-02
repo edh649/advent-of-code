@@ -80,6 +80,8 @@ func main() {
 		prevY = thisTile.y
 	}
 	
+	//Part 2 thinking it's something like check how far to the edge, if it's odd then it's not inside?
+	
 	countInLoop := 0
 	for y, _ := range pipes {
 		for x, _ := range pipes[y] {
@@ -90,7 +92,7 @@ func main() {
 				loopPassthroughSum := 0
 				for lookY := 0; lookY < len(pipes); lookY++ {
 					if (lookY == y) {
-						if loopPassthroughSum % 2 == 0 {
+						if loopPassthroughSum % 2 != 0 {
 							inside = false
 						}
 						loopPassthroughSum = 0
@@ -100,7 +102,7 @@ func main() {
 				}
 				for lookX := 0; lookX < len(pipes[y]); lookX++ {
 					if (lookX == x) {
-						if loopPassthroughSum % 2 == 0 {
+						if loopPassthroughSum % 2 != 0 {
 							inside = false
 						}
 						loopPassthroughSum = 0
@@ -109,6 +111,7 @@ func main() {
 					}
 				}
 				if (inside) {
+					fmt.Println(fmt.Sprint(y) + " " + fmt.Sprint(x) + " is contained in loop")
 					countInLoop++
 				}
 			}

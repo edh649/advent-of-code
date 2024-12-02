@@ -5,11 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Package",
+            "name": "Launch Go Package",
             "type": "go",
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}"
-        }
+        },
+        {
+            "type": "ruby_lsp",
+            "name": "Debug Ruby script",
+            "request": "launch",
+            "program": "ruby ${file}"
+        },
+        {
+            "type": "ruby_lsp",
+            "name": "Debug test",
+            "request": "launch",
+            "program": "ruby ${relativeFile}"
+        },
     ]
 }
