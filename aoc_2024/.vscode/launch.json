@@ -12,6 +12,12 @@
         },
         {
             "type": "ruby_lsp",
+            "name": "run this days test",
+            "request": "launch",
+            "program": "rake test TEST=test/${fileBasenameNoExtension}_test.rb"
+        },
+        {
+            "type": "ruby_lsp",
             "name": "Debug test",
             "request": "launch",
             "program": "ruby ${relativeFile}"
