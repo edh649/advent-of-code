@@ -10,7 +10,7 @@ class TestDay04 < Minitest::Test
   end
 
   def test_part1
-    # assert_equal @day.part1(@data_a), 18
+    assert_equal @day.part1(@data_a), 18
   end
 
   def test_part2
