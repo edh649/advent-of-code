@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'rake/testtask'
 require_relative 'lib/runner'
+require "ruby-prof"
 
 namespace :solve do
 
@@ -8,6 +9,24 @@ namespace :solve do
     desc "Run day #{i}"
     task i.to_s.to_sym do
       Aoc2024::Runner.new.call(i)
+    end
+    if i < 10
+      task ('0' + i.to_s).to_sym => i.to_s.to_sym
+    end
+  end
+end
+
+namespace :profile do
+
+  (1..25).each do |i|
+    desc "Run day #{i}"
+    task i.to_s.to_sym do
+      profile = RubyProf::Profile.new
+      profile.start
+      Aoc2024::Runner.new.call(i)
+      result = profile.stop
+      printer = RubyProf::FlatPrinter.new(result)
+      printer.print(STDOUT)
     end
     if i < 10
       task ('0' + i.to_s).to_sym => i.to_s.to_sym

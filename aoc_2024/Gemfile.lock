@@ -18,6 +18,7 @@ GEM
       psych (>= 4.0.0)
     reline (0.5.12)
       io-console (~> 0.5)
+    ruby-prof (1.7.1)
     stringio (3.1.2)
 
 PLATFORMS
@@ -28,6 +29,7 @@ DEPENDENCIES
   debug
   minitest
   rake (~> 13.0)
+  ruby-prof
 
 BUNDLED WITH
    2.5.23
