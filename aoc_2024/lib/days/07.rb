@@ -1,7 +1,7 @@
 
 class Day07
     
-  def part1(input)
+  def part1(input) # returning too low... 976568637658
     lines = input.split("\n")
     result = 0
     lines.each do |line|
