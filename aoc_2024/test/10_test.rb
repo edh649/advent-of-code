@@ -4,8 +4,6 @@ require_relative '../app'
 
 class TestDay10 < Minitest::Test
   def setup
-    @data_b = File
-    .read(File.join(APP_ROOT, 'examples', '10.txt')).rstrip
     @day = Day10.new
   end
 
@@ -18,6 +16,9 @@ class TestDay10 < Minitest::Test
   end
 
   def test_part2
-    # assert_equal @day.part2(@data_b), 34 
+    assert_equal @day.part2(File.read(File.join(APP_ROOT, 'examples', '10_b_1.txt')).rstrip), 3
+    assert_equal @day.part2(File.read(File.join(APP_ROOT, 'examples', '10_b_2.txt')).rstrip), 13
+    assert_equal @day.part2(File.read(File.join(APP_ROOT, 'examples', '10_b_3.txt')).rstrip), 227
+    assert_equal @day.part2(File.read(File.join(APP_ROOT, 'examples', '10.txt')).rstrip), 81
   end
 end
