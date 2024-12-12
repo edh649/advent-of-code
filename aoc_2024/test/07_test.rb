@@ -13,10 +13,10 @@ class TestDay07 < Minitest::Test
 
   def test_part1
     assert_equal @day.part1(@data_a), 3749
-    assert_equal @day.part1(@data_a_custom), 3965
+    assert_equal @day.part1(@data_a_custom), 25483
   end
 
   def test_part2
-    # assert_equal @day.part2(@data_b), nil
+    assert_equal @day.part2(@data_b), 11387
   end
 end
