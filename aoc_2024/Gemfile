@@ -9,3 +9,6 @@ gem "debug"
 gem "minitest"
 
 gem "ruby-prof"
+
+gem "cbc"
+gem "opt-rb"

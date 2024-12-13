@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    cbc (0.1.2)
     date (3.4.1)
     debug (1.9.2)
       irb (~> 1.10)
@@ -10,6 +11,7 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     minitest (5.25.2)
+    opt-rb (0.1.4)
     psych (5.2.1)
       date
       stringio
@@ -26,8 +28,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  cbc
   debug
   minitest
+  opt-rb
   rake (~> 13.0)
   ruby-prof
 
