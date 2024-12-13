@@ -88,7 +88,7 @@ class Day08
     puts "\n\n"
   end
   
-  def part2(input) ##1199 too low
+  def part2(input) ##1222
     matrix = setupMatrix(input)
     
     antinodeLocations = []
@@ -136,7 +136,7 @@ class Day08
     locations = []
     for x in 0..matrix.count() - 1
       y = (m * x) + c
-      if y.floor() != y #not working
+      if y.floor() != y
         next
       end
       if y < 0 || y >= matrix[0].count()

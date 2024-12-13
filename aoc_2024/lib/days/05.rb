@@ -25,7 +25,6 @@ class Day05
       end
     end
     return result
-    
   end
   
   def findBadPage(updatePages, rulesArr)
@@ -52,39 +51,32 @@ class Day05
       rulesArr[pages[0]].append(pages[1])
     end
     
-    invalidUpdates = []
+    badUpdates = []    
     updates.each do |update|
       updatePages = update.split(",").map do |p| p.to_i end
       if findBadPage(updatePages, rulesArr) != nil
-        invalidUpdates.append(update)
+        badUpdates.append(update)
       end
     end
     
     result = 0
-    
-    # move offending item one later
-    invalidUpdates.each do |update|
-      i = 0
-      updatePages = update.split(",").map do |p| p.to_i end
-      while i < 50000
-        i += 1
-        if i % 100 == 0
-          updatePages.shuffle! #hail mary
+    badUpdates.each do |update|
+      badPages = update.split(",").map do |p| p.to_i end
+      for i in 0..badPages.count()-1 do #inefficient but it'll do, just loop and it'll fix itself..
+        badPages.each_with_index.each do |updatePage, i|
+          (rulesArr[updatePage] || []).each do |pageToGoBefore|
+            if badPages[0..i].include?(pageToGoBefore)
+              # swap pages
+              badPages[i], badPages[badPages.index(pageToGoBefore)] = badPages[badPages.index(pageToGoBefore)], badPages[i]
+            end
+          end
         end
-        badPage = findBadPage(updatePages, rulesArr)
-        if badPage == nil
-          result += updatePages[(updatePages.count() - 1) / 2]
-          break
-        end
-        idx = updatePages.find_index(badPage)
-        updatePages.delete_at(idx)
-        updatePages.insert(idx + 1, badPage)
       end
-      if i == 50000
-        puts "failed to find valid update"
-      end
+      # puts "valid " + update.to_s
+      center = badPages[(badPages.count() - 1) / 2]
+      # puts center.to_s
+      result += center
     end
-    
     return result
   end
   

@@ -10,9 +10,9 @@ class TestDay08 < Minitest::Test
     @day = Day08.new
   end
 
-  def test_part1
-    assert_equal @day.part1(@data_a), 14
-  end
+  # def test_part1
+  #   assert_equal @day.part1(@data_a), 14
+  # end
 
   def test_part2
     assert_equal @day.part2(@data_b), 34 

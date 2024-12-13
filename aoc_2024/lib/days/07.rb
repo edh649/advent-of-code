@@ -41,7 +41,10 @@ class Day07
   def part2(input) # 
     lines = input.split("\n")
     result = 0
+    i = 0
     lines.each do |line|
+      i += 1
+      puts i.to_s + "/" + lines.count.to_s + "\n"
       value = line.split(":")[0].to_i
       inputs = line.split(":")[1].split(" ").map { |x| x.to_i }
       if canMakeEquationValid2?(value, inputs)
@@ -55,7 +58,7 @@ class Day07
   def canMakeEquationValid2?(value, inputs)
     # can only be + and *
     # 1 2 3 4
-    for c in 1..3.pow(inputs.count)
+    for c in 1..3.pow(inputs.count - 1)
       testValue = inputs[0]
       eq = testValue.to_s
       for i in 1..(inputs.count - 1)
@@ -64,14 +67,14 @@ class Day07
           testValue += inputs[i]
           eq += " + " + inputs[i].to_s
         elsif c.fdiv(3.pow(i-1)).ceil % 3 == 1
-          testValue += inputs[i]
-          eq += " + " + inputs[i].to_s
+          testValue *= inputs[i]
+          eq += " * " + inputs[i].to_s
         else
           testValue = (testValue.to_s + inputs[i].to_s).to_i
           eq += " || " + inputs[i].to_s
         end
       end
-      puts eq + " = " + testValue.to_s + "\n"
+      # puts eq + " = " + testValue.to_s + "\n"
       if testValue == value
         return true
       end
