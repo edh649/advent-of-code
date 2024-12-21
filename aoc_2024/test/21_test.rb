@@ -8,7 +8,7 @@ class TestDay21 < Minitest::Test
   end
 
   def test_part1
-    # assert_equal @day.part1(File.read(File.join(APP_ROOT, 'examples', '21.txt')).rstrip), 126384
+    assert_equal @day.part1(File.read(File.join(APP_ROOT, 'examples', '21.txt')).rstrip), 126384
   end
 
   def test_part2

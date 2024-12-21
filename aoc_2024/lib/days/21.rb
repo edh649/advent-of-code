@@ -131,7 +131,8 @@ class Day21
     return dirs.map(&:join)
   end
   
-  def part2(input, depth = 12)
+  def part2(input, depth = 15)
+    @cache = {}
     generateNumericalPadPaths()
     generateDirectionalPadPaths()
     calculateBuildingBlocks()
@@ -150,11 +151,17 @@ class Day21
       return input
     end
     
-    nextInput = (@buildingBlocks["A" + input[0]] || "") + "A" #first go from the previous action to the first place (and click it)
-    for i in 0..input.length - 2
-      nextInput += (@buildingBlocks[input[i..i + 1]] || "") + "A" #and click it!
-    end
-    # puts "\n " + level.to_s + ": " + nextInput.length.to_s + "\n"
+    split = input.split("A").map { |s| s + "A" }
+    nextInput = split.map do |s|
+      next @cache[s] if @cache[s]
+      sNext = (@buildingBlocks["A" + s[0]] || "") + "A" #first go from the previous action to the first place (and click it)
+      for i in 0..s.length - 2
+        sNext += (@buildingBlocks[s[i..i + 1]] || "") + "A" #and click it!
+      end
+      @cache[s] = sNext
+      next sNext
+    end.join()
+    
     return generateStringForLevel(nextInput, level - 1)
   end
   
